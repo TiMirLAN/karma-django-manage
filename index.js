@@ -6,7 +6,6 @@
 var exec_sync = require('exec-sync'),
     path = require('path');
 
-console.log('Django loaded');
 var djangoManagepyRunner = function (config, baseDir) {
     "use strict";
     var python = config.virtualenvDir ? path.join(baseDir, config.virtualenvDir, 'bin/python') : 'python',
