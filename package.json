@@ -1,0 +1,12 @@
+{
+    "name": "karma-django-manage",
+    "main": "index",
+    "description": "Karma plugin for runnig django commands before test.",
+    "version": "0.6.0",
+    "keywords": ["karma-plugin", "django"],
+    "dependencies": {
+        "karma": ">=0.9",
+        "exec-sync": "*",
+        "ffi": "*"
+    }
+}
