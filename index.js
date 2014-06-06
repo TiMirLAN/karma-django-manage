@@ -10,7 +10,7 @@ console.log('Django loaded');
 var djangoManagepyRunner = function (config, baseDir) {
     "use strict";
     var python = config.virtualenvDir ? path.join(baseDir, config.virtualenvDir, 'bin/python') : 'python',
-        manage = path.join(baseDir, config.manageFile),
+        manage = path.join(baseDir, config.manageFile || 'manage.py'),
         managepyCommand = [python, manage].join(' ');
 
     function callManagepy(args) {
