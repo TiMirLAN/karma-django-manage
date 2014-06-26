@@ -6,7 +6,7 @@ Call Django manage.py command before test runs.
 Install
 -------
 
-Run `npm install https://github.com/TiMirLAN/karma-django-manage/tarball/v0.7.0`
+Run `npm install TiMirLAN/karma-django-manage`
 
 Usage
 -----
@@ -42,11 +42,11 @@ In your karma config file:
     };
 
 
-Configuraton
-------------
+Configuration
+-------------
 
 __virtualenvDir__ - Path to virtualenv folder. (optional)
 __commands__ - List of `manage.py` commands, that should be executed.
 __appendToFiles__ - List of `manage.py` commands, that return filename in stdout. That filename will be added into `files` list of carma config; 
 __manageFile__ - Path to `manage.py` file.  
-__silent__ - If true, there are no command output in karma console.  
+__silent__ - If true, there are no command output in karma console (optional).  
