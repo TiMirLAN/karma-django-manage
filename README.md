@@ -45,8 +45,8 @@ In your karma config file:
 Configuration
 -------------
 
-__virtualenvDir__ - Path to virtualenv folder. (optional)
-__commands__ - List of `manage.py` commands, that should be executed.
-__appendToFiles__ - List of `manage.py` commands, that return filename in stdout. That filename will be added into `files` list of carma config; 
-__manageFile__ - Path to `manage.py` file.  
-__silent__ - If true, there are no command output in karma console (optional).  
+ - __virtualenvDir__ - Path to virtualenv folder. (optional)
+ - __commands__ - List of `manage.py` commands, that should be executed.
+ - __appendToFiles__ - List of `manage.py` commands, that return filename in stdout. That filename will be added into `files` list of carma config; 
+ - __manageFile__ - Path to `manage.py` file.  
+ - __silent__ - If true, there are no command output in karma console (optional).  
