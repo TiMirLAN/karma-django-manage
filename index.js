@@ -12,7 +12,7 @@ function Proc() {
         var tmpDir = '';
         if (['TMPDIR', 'TMP', 'TEMP'].some(function (variable) {
                 tmpDir = process.env[variable];
-                return tmpDir != undefined;
+                return tmpDir !== undefined;
             })) {
             return tmpDir.replace(/\/$/g, '');
         }
@@ -49,7 +49,7 @@ function Proc() {
             status;
         try {
             if (status = platform.exec(cmd, tmpFilePath)) {
-                throw new Error('Process exit with code '+ status);
+                throw new Error('Process exit with code ' + status);
             }
             return fs.readFileSync(tmpFilePath).toString().replace(/(\n|\r)+$/g, '');
         } finally {
@@ -69,7 +69,7 @@ var djangoManagepyRunner = function (config, baseDir, files) {
         return proc.exec([managepyCommand, args].join(' '));
     }
 
-    if(config.command) {
+    if (config.command) {
         config.commands.forEach(function (command) {
             if (config.silent) {
                 callManagepy(command);
