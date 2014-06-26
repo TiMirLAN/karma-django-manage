@@ -12,7 +12,7 @@ function Proc() {
         var tmpDir = '';
         if (['TMPDIR', 'TMP', 'TEMP'].some(function (variable) {
                 tmpDir = process.env[variable];
-                return tmpDir !== null;
+                return tmpDir != undefined;
             })) {
             return tmpDir.replace(/\/$/g, '');
         }
@@ -25,7 +25,7 @@ function Proc() {
 
     var ffi = require('ffi'),
         fs = require('fs'),
-        callProcess = new {
+        platform = new {
             win32: function Win32Platform() {
                 var lib = new ffi.Library("./lib/proc", {
                     run: ["int", ["string", "string"]]
@@ -48,7 +48,7 @@ function Proc() {
         var tmpFilePath = getTmpFilePath(),
             status;
         try {
-            if (status = callProcess(cmd, tmpFilePath)) {
+            if (status = platform.exec(cmd, tmpFilePath)) {
                 throw new Error('Process exit with code '+ status);
             }
             return fs.readFileSync(tmpFilePath).toString().replace(/(\n|\r)+$/g, '');
@@ -69,22 +69,26 @@ var djangoManagepyRunner = function (config, baseDir, files) {
         return proc.exec([managepyCommand, args].join(' '));
     }
 
-    config.commands.forEach(function (command) {
-        if (config.silent) {
-            callManagepy(command);
-        } else {
-            console.log(callManagepy(command));
-        }
-    });
-
-    config.appendToFiles.forEach(function (command) {
-        files.push({
-            pattern: path.resolve(baseDir, callManagepy(command)),
-            included: true,
-            served: true,
-            watched: false
+    if(config.command) {
+        config.commands.forEach(function (command) {
+            if (config.silent) {
+                callManagepy(command);
+            } else {
+                console.log(callManagepy(command));
+            }
         });
-    });
+    }
+
+    if (config.appendToFiles) {
+        config.appendToFiles.forEach(function (command) {
+            files.push({
+                pattern: path.resolve(baseDir, callManagepy(command)),
+                included: true,
+                served: true,
+                watched: false
+            });
+        });
+    }
 };
 
 djangoManagepyRunner.$inject = ['config.djangoManage', 'config.basePath', 'config.files'];
