@@ -1,8 +1,8 @@
 /**
  * Created by mta on 05.06.14.
  */
-/*jslint node:true */
-/*global console */
+/*jslint node:true, nomen:true */
+/*global console, __dirname */
 var path = require('path');
 
 
@@ -27,7 +27,7 @@ function Proc() {
         fs = require('fs'),
         platform = new {
             win32: function Win32Platform() {
-                var lib = new ffi.Library("./lib/proc", {
+                var lib = new ffi.Library(path.join(__dirname, "lib/proc.dll"), {
                     run: ["int", ["string", "string"]]
                 });
                 this.exec = function (cmd, tmpFilePath) {
