@@ -41,6 +41,14 @@ function Proc() {
                 this.exec = function (cmd, tmpFilePath) {
                     return lib.system(cmd + ">" + tmpFilePath);
                 };
+            },
+            darwin: function LinuxPlatform() {
+                var lib = new ffi.Library(null, {
+                    "system": ["int32", ["string"]]
+                });
+                this.exec = function (cmd, tmpFilePath) {
+                    return lib.system(cmd + ">" + tmpFilePath);
+                };
             }
         }[process.platform]();
 
