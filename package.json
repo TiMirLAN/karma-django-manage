@@ -10,6 +10,6 @@
     "keywords": ["karma-plugin", "django"],
     "dependencies": {
         "karma": ">=0.9",
-        "ffi": "*"
+        "node-pipedexec": "TiMirLAN/node-pipedexec"
     }
 }

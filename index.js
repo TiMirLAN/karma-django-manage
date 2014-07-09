@@ -3,78 +3,18 @@
  */
 /*jslint node:true, nomen:true */
 /*global console, __dirname */
-var path = require('path');
+var path = require('path'),
+    pse = require('node-pipedexec');
 
-
-function Proc() {
-    "use strict";
-    function getTempFileDir() {
-        var tmpDir = '';
-        if (['TMPDIR', 'TMP', 'TEMP'].some(function (variable) {
-                tmpDir = process.env[variable];
-                return tmpDir !== undefined;
-            })) {
-            return tmpDir.replace(/\/$/g, '');
-        }
-        return '/tmp';
-    }
-
-    function getTmpFilePath() {
-        return getTempFileDir() + '/' + Date.now().toString(10) + '.txt';
-    }
-
-    var ffi = require('ffi'),
-        fs = require('fs'),
-        platform = new {
-            win32: function Win32Platform() {
-                var lib = new ffi.Library(path.join(__dirname, "lib/proc.dll"), {
-                    run: ["int", ["string", "string"]]
-                });
-                this.exec = function (cmd, tmpFilePath) {
-                    return lib.run(cmd, tmpFilePath);
-                };
-            },
-            linux: function LinuxPlatform() {
-                var lib = new ffi.Library(null, {
-                    "system": ["int32", ["string"]]
-                });
-                this.exec = function (cmd, tmpFilePath) {
-                    return lib.system(cmd + ">" + tmpFilePath);
-                };
-            },
-            darwin: function LinuxPlatform() {
-                var lib = new ffi.Library(null, {
-                    "system": ["int32", ["string"]]
-                });
-                this.exec = function (cmd, tmpFilePath) {
-                    return lib.system(cmd + ">" + tmpFilePath);
-                };
-            }
-        }[process.platform]();
-
-    this.exec = function (cmd) {
-        var tmpFilePath = getTmpFilePath(),
-            status;
-        try {
-            if (status = platform.exec(cmd, tmpFilePath)) {
-                throw new Error('Process exit with code ' + status);
-            }
-            return fs.readFileSync(tmpFilePath).toString().replace(/(\n|\r)+$/g, '');
-        } finally {
-            fs.unlinkSync(tmpFilePath);
-        }
-    };
-}
 
 var djangoManagepyRunner = function (config, baseDir, files) {
     "use strict";
     var python = config.virtualenvDir ? path.join(baseDir, config.virtualenvDir, 'bin/python') : 'python',
         manage = path.join(baseDir, config.manageFile || 'manage.py'),
-        managepyCommand = [python, manage].join(' '),
-        proc = new Proc();
+        managepyCommand = [python, manage].join(' ');
 
     function callManagepy(args) {
-        return proc.exec([managepyCommand, args].join(' '));
+        return pse.exec.apply(null, [managepyCommand].concat(args.split(' ')));
     }
 
     if (config.command) {
@@ -82,7 +22,7 @@ var djangoManagepyRunner = function (config, baseDir, files) {
             if (config.silent) {
                 callManagepy(command);
             } else {
-                console.log(callManagepy(command));
+                console.log(callManagepy(command).out);
             }
         });
     }
@@ -90,7 +30,7 @@ var djangoManagepyRunner = function (config, baseDir, files) {
     if (config.appendToFiles) {
         config.appendToFiles.forEach(function (command) {
             files.push({
-                pattern: path.resolve(baseDir, callManagepy(command)),
+                pattern: path.resolve(baseDir, callManagepy(command).out),
                 included: true,
                 served: true,
                 watched: false
