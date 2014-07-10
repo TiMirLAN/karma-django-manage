@@ -9,7 +9,13 @@ var path = require('path'),
 
 var djangoManagepyRunner = function (config, baseDir, files) {
     "use strict";
-    var python = config.virtualenvDir ? path.join(baseDir, config.virtualenvDir, 'bin/python') : 'python',
+    var platformEnvPythonDir = /^win/.test(process.platform) ? 'Scripts' : 'bin',
+        python = config.virtualenvDir ? path.join(
+            baseDir,
+            config.virtualenvDir,
+            platformEnvPythonDir,
+            'python'
+        ) : 'python',
         manage = path.join(baseDir, config.manageFile || 'manage.py');
 
     function callManagepy(args) {

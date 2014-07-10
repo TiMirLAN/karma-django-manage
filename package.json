@@ -2,7 +2,7 @@
     "name": "karma-django-manage",
     "main": "index",
     "description": "Call Django manage.py command before test runs.",
-    "version": "0.9.1",
+    "version": "0.9.2",
     "repository": {
         "type": "git",
         "url": "http://github.com/TiMirLAN/karma-django-manage"
